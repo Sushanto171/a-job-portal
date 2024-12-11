@@ -4,12 +4,23 @@ import logo from "../../../assets/icons8-job-seeker-100.png";
 import { AuthContext } from "./../../../Provider/AuthContext/AuthContext";
 
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, signOutUser, loading } = useContext(AuthContext);
+
+  const signOutHandler = () => {
+    signOutUser().then(() => {
+      console.log("sign out success");
+    });
+  };
   const links = (
     <>
       {user ? (
         <>
-          <button>Sign Out</button>
+          <button
+            className="hover:-translate-y-1 rounded-full duration-200 btn btn-sm bg-[#EE552A] hover:btn-outline text-black hover:!text-[#EE552A] hover:!bg-transparent hover:!border-[#EE552A]"
+            onClick={signOutHandler}
+          >
+            Sign Out
+          </button>
         </>
       ) : (
         <>
@@ -30,6 +41,10 @@ const Navbar = () => {
       )}
     </>
   );
+
+  // if (loading) {
+  //   return <span className="loading loading-spinner loading-xs"></span>;
+  // }
   return (
     <>
       <div className="drawer">

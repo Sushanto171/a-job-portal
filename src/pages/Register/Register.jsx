@@ -1,8 +1,12 @@
 import Lottie from "lottie-react";
+import { useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/login.json";
 const Register = () => {
+  const { createUser, loading } = useContext(AuthContext);
+
   const loginFormHandler = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -12,6 +16,14 @@ const Register = () => {
     const photo = form.photo.value;
     const terms = form.terms.checked;
     console.log({ email, password, name, photo, terms });
+
+    createUser(email, password)
+      .then((res) => {
+        console.log(res.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <>
@@ -87,6 +99,9 @@ const Register = () => {
               </div>
               <div className="form-control mt-6">
                 <button className="btn hover:-translate-y-[2px] hover:bg-[#EE552A] bg-[#FFAD7B] text-white rounded-full hover:shadow-2xl transition-all duration-200">
+                  {loading && (
+                    <span className="loading loading-spinner loading-xs"></span>
+                  )}
                   Register now
                 </button>
               </div>
