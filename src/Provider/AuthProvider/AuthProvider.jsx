@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
   const googleProvider = new GoogleAuthProvider();
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (createUser) {
         setUser(currentUser);
         setLoading(false);
@@ -28,10 +28,8 @@ const AuthProvider = ({ children }) => {
     });
     return () => {
       unSubscribe();
-      setLoading(false);
     };
   }, []);
-  // console.log(user);
 
   // sign out
   const signOutUser = () => {
@@ -60,6 +58,7 @@ const AuthProvider = ({ children }) => {
     createUser,
     signOutUser,
     setLoading,
+    setUser,
   };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

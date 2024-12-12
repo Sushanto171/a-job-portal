@@ -10,7 +10,7 @@ const MainLayout = () => {
   //   return <span className="loading loading-spinner loading-xs"></span>;
   // }
   return (
-    <div>
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
       <Outlet />
       <Footer />

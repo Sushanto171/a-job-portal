@@ -6,7 +6,7 @@ import image from "../../../assets/developer/developer-team.jpg";
 
 const Banner = () => {
   return (
-    <div className="hero bg-base-200">
+    <div className="hero bg-base-100">
       <div className="hero-content grid grid-cols-1 md:grid-cols-2 gap-10">
         <motion.div
           animate={{ y: [50, 0] }}
@@ -16,10 +16,17 @@ const Banner = () => {
             ease: "easeInOut",
           }}
         >
-          <h1 h1 className="text-5xl font-bold">
-            Latest Jobs For You!
+          <h1 className="text-5xl font-bold">
+            Latest {""}
+            <motion.span
+              animate={{ color: ["#EE552A", "#ff9f33", "#f1bd24", "#ec812e"] }}
+              transition={{ duration: 3, delay: 1, repeat: Infinity }}
+            >
+              Jobs
+            </motion.span>{" "}
+            For You!
           </h1>
-          <p className="py-6">
+          <p className="py-6 opacity-80">
             Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
             excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
             a id nisi.
@@ -44,13 +51,13 @@ const Banner = () => {
               ease: "easeInOut",
             }}
             src={image}
-            className="max-w-72  shadow-2xl rounded-t-[40px] rounded-br-[40px] border-l-8 border-b-8 border-[#EE552A]"
+            className="max-w-72  shadow-2xl rounded-t-[40px] rounded-br-[40px] border-l-4 border-b-4 border-[#EE552A]"
           />
           <motion.img
             animate={{ x: [100, 120, 100] }}
             transition={{ duration: 3, delay: 1.5, repeat: Infinity }}
             src={image1}
-            className="max-w-60  mt-16 shadow-2xl rounded-t-[40px] rounded-br-[40px] border-l-8 border-b-8 border-[#EE552A] object-cover"
+            className="max-w-60  mt-16 shadow-2xl rounded-t-[40px] rounded-br-[40px] border-l-4 border-b-4 border-[#EE552A] object-cover"
           />
         </div>
       </div>

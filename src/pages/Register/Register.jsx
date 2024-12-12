@@ -1,11 +1,34 @@
 import Lottie from "lottie-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/login.json";
 const Register = () => {
   const { createUser, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const passwordValidation = (e) => {
+    const password = e.target.value;
+    setError("");
+    setSuccess("");
+    // password validation
+    if (!/[a-z]/.test(password)) {
+      return setError("At least one lowercase");
+    } else if (!/[A-Z]/.test(password)) {
+      return setError("At least one Uppercase");
+    } else if (!/\d/.test(password)) {
+      return setError("At least one digit");
+    } else if (password.length < 6) {
+      return setError("Password must be 6 character or longer ");
+    } else {
+      setSuccess("Your password is very strong 💪");
+      setError("");
+    }
+  };
 
   const loginFormHandler = (e) => {
     e.preventDefault();
@@ -15,15 +38,49 @@ const Register = () => {
     const name = form.name.value;
     const photo = form.photo.value;
     const terms = form.terms.checked;
-    console.log({ email, password, name, photo, terms });
+    const userData = { email, name, photo, terms };
 
+    if (error) {
+      return error;
+    }
     createUser(email, password)
       .then((res) => {
-        console.log(res.user);
+        try {
+          fetch("http://localhost:5000/users", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(userData),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.success) {
+                Swal.fire({
+                  title: data.message,
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+                navigate("/");
+                form.reset();
+              } else {
+                Swal.fire({
+                  title: data.message,
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+              }
+            });
+        } catch (error) {
+          Swal.fire({
+            title: data.message,
+            timer: 2000,
+          });
+        }
       })
       .catch((error) => {
-        console.log(error);
+        setError(error);
       });
+    setError("");
+    setSuccess("");
   };
   return (
     <>
@@ -73,7 +130,7 @@ const Register = () => {
                   required
                 />
               </div>
-              <div className="form-control">
+              <div className="form-control relative">
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
@@ -83,7 +140,18 @@ const Register = () => {
                   placeholder="password"
                   className="input input-bordered rounded-full"
                   required
+                  onChange={passwordValidation}
                 />
+                {error && (
+                  <p className="text-error text-xs absolute bottom-5 right-4">
+                    {error}
+                  </p>
+                )}
+                {success && (
+                  <p className="text-success text-xs absolute bottom-5 right-4">
+                    {success}
+                  </p>
+                )}
                 <div className="form-control">
                   <label className="cursor-pointer label flex-row-reverse justify-end gap-1">
                     <span className="label-text">
