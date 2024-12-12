@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import logo from "../../../assets/logo.png";
 import { AuthContext } from "./../../../Provider/AuthContext/AuthContext";
@@ -11,10 +11,11 @@ const Navbar = () => {
     setUser,
     loading: globalLoading,
   } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const signOutHandler = () => {
     signOutUser().then(() => {
+      navigate("/login");
       Swal.fire({
         title: "sign out success",
         timer: 2000,

@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/login.json";
 const Register = () => {
-  const { createUser, loading } = useContext(AuthContext);
+  const { createUser, loading, signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -81,6 +81,44 @@ const Register = () => {
       });
     setError("");
     setSuccess("");
+  };
+
+  const googleLoginHandler = () => {
+    signInWithGoogle()
+      .then((res) => {
+        const user = res?.user;
+        if (user) {
+          const userData = {
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+            terms: false,
+          };
+          try {
+            fetch(`http://localhost:5000/users`, {
+              method: "PATCH",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(userData),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.success) {
+                  navigate("/");
+                  Swal.fire({
+                    timer: 2000,
+                    title: data.message,
+                    showConfirmButton: false,
+                  });
+                }
+              });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error, "ERROR");
+      });
   };
   return (
     <>
@@ -176,7 +214,10 @@ const Register = () => {
             </form>
             <div className="p-5 pt-0">
               <div className="divider"> OR</div>
-              <button className="btn hover:-translate-y-[2px] !bg-white hover:shadow transition-all duration-200 hover:rounded-full w-full flex">
+              <button
+                onClick={googleLoginHandler}
+                className="btn hover:-translate-y-[2px] !bg-white hover:shadow transition-all duration-200 hover:rounded-full w-full flex"
+              >
                 <FcGoogle size={25} /> <span>Log in with Google</span>
               </button>
               <p className="my-3 text-sm">

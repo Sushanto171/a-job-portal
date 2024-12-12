@@ -1,29 +1,38 @@
 import Lottie from "lottie-react";
 import { useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/register.json";
 const LogIn = () => {
-  const { signInWithGoogle, signIn, loading, setLoading } =
-    useContext(AuthContext);
+  const { signInWithGoogle, signIn, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
   const loginFormHandler = (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log({ email, password });
 
     signIn(email, password)
       .then((res) => {
-        console.log(res.user);
+        if (res.user) {
+          navigate(state?.location || "/");
+          Swal.fire({
+            title: "User Log in successfully",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
       })
       .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
-        setLoading(false);
+        Swal.fire({
+          title: error.message,
+          timer: 2000,
+          showConfirmButton: false,
+        });
       });
   };
 
@@ -31,7 +40,35 @@ const LogIn = () => {
   const googleLoginHandler = () => {
     signInWithGoogle()
       .then((res) => {
-        console.log(res.user);
+        const user = res?.user;
+        if (user) {
+          const userData = {
+            name: user.displayName,
+            email: user.email,
+            photo: user.photoURL,
+            terms: false,
+          };
+          try {
+            fetch(`http://localhost:5000/users`, {
+              method: "PATCH",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(userData),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.success) {
+                  navigate(state?.location || "/");
+                  Swal.fire({
+                    timer: 2000,
+                    title: data.message,
+                    showConfirmButton: false,
+                  });
+                }
+              });
+          } catch (error) {
+            console.log(error);
+          }
+        }
       })
       .catch((error) => {
         console.log(error, "ERROR");
