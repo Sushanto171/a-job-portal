@@ -6,9 +6,13 @@ import { AuthContext } from "../Provider/AuthContext/AuthContext";
 
 const MainLayout = () => {
   const { loading } = useContext(AuthContext);
-  // if (loading) {
-  //   return <span className="loading loading-spinner loading-xs"></span>;
-  // }
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <span className="loading loading-spinner loading-xs"></span>;
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Navbar />

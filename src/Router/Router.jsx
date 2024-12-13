@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import JobApply from "../components/JobApply/JobApply";
 import MainLayout from "../MainLayout/MainLayout";
 import Home from "../pages/Home/Home";
 import JobDetails from "../pages/JobDetails/JobDetails";
@@ -36,6 +37,18 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <JobDetails />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/jobs-apply/:id/:email",
+        loader: ({ params }) =>
+          fetch(
+            `http://localhost:5000/jobs-applied?id=${params.id}&email=${params.email}`
+          ),
+        element: (
+          <ProtectedRoute>
+            <JobApply />
           </ProtectedRoute>
         ),
       },

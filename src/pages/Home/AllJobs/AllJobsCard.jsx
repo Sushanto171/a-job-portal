@@ -1,7 +1,9 @@
 import React from "react";
+import { BsCurrencyDollar } from "react-icons/bs";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaComputerMouse } from "react-icons/fa6";
 import { PiBagDuotone } from "react-icons/pi";
+import { TbCurrencyTaka } from "react-icons/tb";
 import { Link } from "react-router-dom";
 
 const AllJobsCard = ({ job }) => {
@@ -48,6 +50,15 @@ const AllJobsCard = ({ job }) => {
             </div>
           ))}
         </div>
+        <p className="text-sm flex items-center gap-1 mt-4">
+          Salary: <span> max:{salaryRange.max}</span>{" "}
+          <span> min:{salaryRange.min}</span>
+          {salaryRange.currency === "bdt" ? (
+            <TbCurrencyTaka />
+          ) : (
+            <BsCurrencyDollar />
+          )}
+        </p>
         <div className=" mt-5 flex justify-between items-center">
           <p className="text-xs">Deadline: {applicationDeadline}</p>
           <Link to={`/jobs/${job._id}`}>

@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
+import { BsCurrencyDollar } from "react-icons/bs";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaComputerMouse } from "react-icons/fa6";
 import { PiBagDuotone } from "react-icons/pi";
-import { useLoaderData } from "react-router-dom";
+import { TbCurrencyTaka } from "react-icons/tb";
+import { Link, useLoaderData } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 
 const JobDetails = () => {
   const job = useLoaderData();
+  const { user } = useContext(AuthContext);
+
   const {
     company_logo,
     company,
@@ -16,10 +21,12 @@ const JobDetails = () => {
     salaryRange,
     requirements,
     category,
+    description,
+    _id,
   } = job.data;
-  console.log(job);
+  console.log(job.data);
   return (
-    <div className="card bg-gray-50 border justify-between border-[#ee542a1e] hover:border-[#ee542a77] hover:-translate-y-[1px] hover:shadow hover:bg-[#ee542a14] duration-200 transition-all">
+    <div className="card my-10 bg-gray-50 border md:w-3/5 mx-auto justify-between border-[#ee542a1e] hover:border-[#ee542a77] duration-200 transition-all">
       <div className="flex items-center gap-1 p-1 pt-4">
         <figure>
           <img className="w-20 h-20" src={company_logo} alt="Shoes" />
@@ -49,12 +56,27 @@ const JobDetails = () => {
             </div>
           ))}
         </div>
-        <div className=" mt-5 flex justify-between items-center">
-          <p className="text-xs">Deadline: {applicationDeadline}</p>
+        <p className="text-sm flex items-center gap-1 mt-4">
+          Salary: <span> max:{salaryRange.max}</span>
+          <span> min:{salaryRange.min}</span>
+          {salaryRange.currency === "bdt" ? (
+            <TbCurrencyTaka />
+          ) : (
+            <BsCurrencyDollar />
+          )}
+        </p>
+        <p className="mt-4">{description}</p>
+        <div className=" mt-5 flex justify-between items-center gap-4">
+          <p className="text-xs flex-1">Deadline: {applicationDeadline}</p>
 
           <button className="btn hover:-translate-y-[2px] hover:bg-[#EE552A] bg-[#FFAD7B] text-white rounded-full hover:shadow-2xl transition-all duration-200">
-            View details
+            Save job
           </button>
+          <Link to={`/jobs-apply/${_id}/${user.email}`}>
+            <button className="btn hover:-translate-y-[2px] hover:bg-[#EE552A] bg-[#FFAD7B] text-white rounded-full hover:shadow-2xl transition-all duration-200">
+              apply now
+            </button>
+          </Link>
         </div>
       </div>
     </div>
