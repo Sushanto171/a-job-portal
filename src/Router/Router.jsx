@@ -19,8 +19,15 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/my-application",
-        element: <MyApplication />,
+        path: "/my-recruitment/:email",
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/job-apply/${params.email}`),
+        element: (
+          <ProtectedRoute>
+            {" "}
+            <MyApplication />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/login",

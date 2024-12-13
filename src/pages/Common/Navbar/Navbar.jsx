@@ -60,10 +60,10 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
-          to="/my-application"
+          to={`/my-recruitment/${user?.email}`}
           className={({ isActive }) => (isActive ? "underline" : "")}
         >
-          My Application
+          My Recruitment
         </NavLink>
       </li>
     </>
