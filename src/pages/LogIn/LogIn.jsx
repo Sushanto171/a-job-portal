@@ -6,7 +6,8 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/register.json";
 const LogIn = () => {
-  const { signInWithGoogle, signIn, loading } = useContext(AuthContext);
+  const { signInWithGoogle, signIn, loading, setLoading } =
+    useContext(AuthContext);
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -25,9 +26,11 @@ const LogIn = () => {
             timer: 2000,
             showConfirmButton: false,
           });
+          setLoading(false);
         }
       })
       .catch((error) => {
+        setLoading(false);
         Swal.fire({
           title: error.message,
           timer: 2000,

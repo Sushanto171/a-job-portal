@@ -36,7 +36,7 @@ const Navbar = () => {
               setUser(data.data);
             });
         } else {
-          setUser(null);
+          setUser(user);
         }
       } catch (error) {
         // console.log(error);
@@ -71,7 +71,15 @@ const Navbar = () => {
           to={`/add-job`}
           className={({ isActive }) => (isActive ? "underline" : "")}
         >
-          Add job
+          Add Job
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to={`/my-jobs/${user?.email}`}
+          className={({ isActive }) => (isActive ? "underline" : "")}
+        >
+          My Jobs
         </NavLink>
       </li>
     </>

@@ -1,11 +1,16 @@
-import { useLoaderData } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLoaderData } from "react-router-dom";
 
-const MyApplication = () => {
-  const data = useLoaderData();
+const MyJob = () => {
+  const { data } = useLoaderData();
+  const [jobs, setJobs] = useState(data ? data : []);
 
-  if (data.data.length === 0) {
-    return <h1 className="w-10/12 mx-auto">No data found</h1>;
-  }
+  const deleteHandler = (id) => {
+    console.log(id);
+  };
+
+  if (jobs.length === 0) return <h2>No Job found</h2>;
+
   return (
     <>
       <div className="overflow-x-auto my-10 w-10/12 mx-auto">
@@ -16,12 +21,12 @@ const MyApplication = () => {
               <th>#</th>
               <th>Name</th>
               <th>Job</th>
-              <th>Favorite Color</th>
+              <th>Deadline</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {data?.data?.map((job, i) => (
+            {jobs.map((job, i) => (
               <tr key={job._id}>
                 <th>{i + 1}</th>
                 <td>
@@ -41,15 +46,23 @@ const MyApplication = () => {
                   </div>
                 </td>
                 <td>
-                  Zemlak, Daniel and Leannon
+                  {job.title}
                   <br />
                   <span className="badge badge-ghost badge-sm">
-                    Desktop Support Technician
+                    {job.category}
                   </span>
                 </td>
-                <td>Purple</td>
+                <td>{job.applicationDeadline}</td>
                 <th>
-                  <button className="btn btn-ghost btn-xs">details</button>
+                  <Link to={`/my-job/${job._id}`}>
+                    <button className="btn btn-xs ">Update</button>
+                  </Link>
+                  <button
+                    className="btn btn-xs text-error "
+                    onClick={() => deleteHandler(job._id)}
+                  >
+                    Delete
+                  </button>
                 </th>
               </tr>
             ))}
@@ -60,4 +73,4 @@ const MyApplication = () => {
   );
 };
 
-export default MyApplication;
+export default MyJob;

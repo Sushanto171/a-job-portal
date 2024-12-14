@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import JobApply from "../components/JobApply/JobApply";
+import UpdateJob from "../components/JobApply/updateJob/UpdateJob";
 import MainLayout from "../MainLayout/MainLayout";
 import AddJob from "../pages/AddJob/AddJob";
 import Home from "../pages/Home/Home";
 import JobDetails from "../pages/JobDetails/JobDetails";
 import LogIn from "../pages/LogIn/LogIn";
 import MyApplication from "../pages/MyApplication/MyApplication";
+import MyJob from "../pages/myJOb/MyJob";
 import Register from "../pages/Register/Register";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
@@ -63,8 +65,25 @@ export const router = createBrowserRouter([
         path: "/add-job",
         element: (
           <ProtectedRoute>
-            {" "}
             <AddJob />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-jobs/:email",
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/jobs?hr_email=${params.email}`),
+        element: (
+          <ProtectedRoute>
+            <MyJob />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/my-job/:id",
+        element: (
+          <ProtectedRoute>
+            <UpdateJob />
           </ProtectedRoute>
         ),
       },

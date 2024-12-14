@@ -1,47 +1,76 @@
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import ContextProvider from "../../Provider/ContexProvider";
 
-const AddJob = () => {
-  const { user } = ContextProvider();
+const UpdateJob = () => {
   const navigate = useNavigate();
-
-  const handleForm = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const jobData = {};
-    for (const [key, value] of formData) {
-      jobData[key] = value;
-    }
-    jobData.requirements = jobData.requirements.split("\n");
-    jobData.responsibilities = jobData.responsibilities.split("\n");
-    jobData.salaryRange = {
-      max: jobData.max,
-      min: jobData.min,
-      currency: jobData.currency,
-    };
-    const keysToDelete = ["max", "min", "currency"];
-    keysToDelete.forEach((key) => {
-      delete jobData[key];
-    });
-    // console.log(jobData);
-    // make a job by input jobData
+  const { id } = useParams();
+  const [updateJob, setUpdateJob] = useState({});
+  useEffect(() => {
+    jobLoad();
+  }, [id]);
+  const jobLoad = async () => {
     try {
-      const res = await fetch("http://localhost:5000/jobs", {
-        method: "POST",
+      const res = await fetch(`http://localhost:5000/jobs?id=${id}`);
+      const { data } = await res.json();
+      setUpdateJob(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const {
+    _id,
+    title,
+    company,
+    company_logo,
+    location,
+    category,
+    jobType,
+    hr_name,
+    hr_email,
+    requirements,
+    description,
+    responsibilities,
+    salaryRange,
+    applicationDeadline,
+  } = updateJob;
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updateJobIn = {};
+    for (const [key, value] of formData.entries()) {
+      updateJobIn[key] = value;
+    }
+    updateJobIn.requirements = updateJobIn.requirements.split("\n");
+    updateJobIn.responsibilities = updateJobIn.responsibilities.split("\n");
+    updateJobIn.salaryRange = {
+      max: updateJobIn.max,
+      min: updateJobIn.min,
+      currency: updateJobIn.currency,
+    };
+    const keyToDelete = ["max", "min", "currency"];
+    keyToDelete.forEach((key) => {
+      delete updateJobIn[key];
+    });
+
+    // update job
+    try {
+      const res = await fetch(`http://localhost:5000/job/${_id}`, {
+        method: "PUT",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(jobData),
+        body: JSON.stringify(updateJobIn),
       });
       const data = await res.json();
-      if (data.data.insertedId) {
+      if (data.data.modifiedCount > 0) {
         Swal.fire({
           title: data.message,
           timer: 2000,
           showConfirmButton: false,
         });
-        navigate(`/my-jobs/${user.email}`);
         e.target.reset();
+        navigate(-1);
       }
     } catch (error) {
       Swal.fire({
@@ -53,10 +82,10 @@ const AddJob = () => {
   };
   return (
     <div className="w-10/12 mx-auto">
-      <h3 className="text-3xl text-center my-5">Add Job</h3>
+      <h3 className="text-3xl text-center my-5">Update Job</h3>
       <form
         className="card-body grid grid-cols-2 border bg-base-200"
-        onSubmit={handleForm}
+        onSubmit={handleUpdate}
       >
         {/* title */}
         <div className="form-control">
@@ -67,6 +96,7 @@ const AddJob = () => {
             type="text"
             name="title"
             placeholder="type job title"
+            defaultValue={title}
             className="input input-bordered"
             required
           />
@@ -79,6 +109,7 @@ const AddJob = () => {
           <input
             type="text"
             name="company"
+            defaultValue={company}
             placeholder="type company name"
             className="input input-bordered"
             required
@@ -92,6 +123,7 @@ const AddJob = () => {
           <input
             type="url"
             name="company_logo"
+            defaultValue={company_logo}
             placeholder="type company logo url"
             className="input input-bordered"
             required
@@ -105,6 +137,7 @@ const AddJob = () => {
           <input
             type="text"
             name="location"
+            defaultValue={location}
             placeholder="type location "
             className="input input-bordered"
             required
@@ -118,6 +151,7 @@ const AddJob = () => {
           <input
             type="text"
             name="category"
+            defaultValue={category}
             placeholder="type category "
             className="input input-bordered"
             required
@@ -131,6 +165,7 @@ const AddJob = () => {
           <input
             type="text"
             name="jobType"
+            defaultValue={jobType}
             placeholder="job type  "
             className="input input-bordered"
             required
@@ -143,6 +178,7 @@ const AddJob = () => {
           </label>
           <input
             type="date"
+            defaultValue={applicationDeadline}
             name="applicationDeadline"
             placeholder="type deadline"
             className="input input-bordered"
@@ -157,7 +193,7 @@ const AddJob = () => {
           <input
             type="text"
             name="hr_name"
-            defaultValue={user?.name}
+            defaultValue={hr_name}
             readOnly
             placeholder="type hr name"
             className="input input-bordered"
@@ -172,9 +208,9 @@ const AddJob = () => {
           <input
             type="text"
             name="hr_email"
-            placeholder="type hr email"
-            value={user?.email}
+            defaultValue={hr_email}
             readOnly
+            placeholder="type hr email"
             className="input input-bordered"
             required
           />
@@ -188,6 +224,7 @@ const AddJob = () => {
           <textarea
             required
             name="requirements"
+            defaultValue={requirements}
             placeholder="each requirement type new line "
             className="textarea textarea-bordered"
           ></textarea>
@@ -201,6 +238,7 @@ const AddJob = () => {
           <textarea
             required
             name="description"
+            defaultValue={description}
             placeholder="each requirement type new line "
             className="textarea textarea-bordered"
           ></textarea>
@@ -215,6 +253,7 @@ const AddJob = () => {
               required
               type="number"
               name="max"
+              defaultValue={salaryRange?.max}
               placeholder="max "
               className="textarea textarea-bordered"
             />
@@ -222,13 +261,14 @@ const AddJob = () => {
               required
               type="number"
               name="min"
+              defaultValue={salaryRange?.min}
               placeholder="min "
               className="textarea textarea-bordered"
             />
             <select
               required
               name="currency"
-              defaultValue="Currency"
+              defaultValue={salaryRange?.currency}
               className="select select-bordered w-full max-w-xs"
             >
               <option disabled>Currency</option>
@@ -248,6 +288,7 @@ const AddJob = () => {
           <textarea
             required
             name="responsibilities"
+            defaultValue={responsibilities}
             placeholder="each requirement type new line "
             className="textarea textarea-bordered"
           ></textarea>
@@ -261,5 +302,4 @@ const AddJob = () => {
     </div>
   );
 };
-
-export default AddJob;
+export default UpdateJob;
