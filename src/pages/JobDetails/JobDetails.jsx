@@ -24,7 +24,7 @@ const JobDetails = () => {
     description,
     _id,
   } = job.data;
-  console.log(job.data);
+
   return (
     <div className="card my-10 bg-gray-50 border md:w-3/5 mx-auto justify-between border-[#ee542a1e] hover:border-[#ee542a77] duration-200 transition-all">
       <div className="flex items-center gap-1 p-1 pt-4">

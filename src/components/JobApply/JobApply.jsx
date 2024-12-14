@@ -47,6 +47,7 @@ const JobApply = () => {
       company_logo,
       applicationDeadline: applicationDeadline,
     };
+    console.log(data);
     try {
       fetch("http://localhost:5000/job-apply", {
         method: "POST",

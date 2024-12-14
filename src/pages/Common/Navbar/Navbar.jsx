@@ -60,10 +60,18 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
-          to={`/my-recruitment/${user?.email}`}
+          to={`/my-application/${user?.email}`}
           className={({ isActive }) => (isActive ? "underline" : "")}
         >
-          My Recruitment
+          My Application
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to={`/add-job`}
+          className={({ isActive }) => (isActive ? "underline" : "")}
+        >
+          Add job
         </NavLink>
       </li>
     </>
@@ -136,7 +144,7 @@ const Navbar = () => {
             </div>
             <div className="">
               <Link to={"/"} className="flex items-center gap-1 ">
-                <img src={logo} className="w-10" alt="" />{" "}
+                <img src={logo} className="w-10" alt="" />
                 <span className="text-lg font-bold">A Job Portal</span>
               </Link>
             </div>
@@ -148,7 +156,7 @@ const Navbar = () => {
               {user && <p>Welcome, Back! {user?.name}</p>}
             </div>
             <div className="hidden flex-none lg:block">
-              <ul className="menu menu-horizontal">
+              <ul className="menu menu-horizontal ">
                 {/* Navbar menu content here */}
                 {links}
               </ul>
