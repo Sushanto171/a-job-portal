@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import JobApply from "../components/JobApply/JobApply";
 import UpdateJob from "../components/JobApply/updateJob/UpdateJob";
+import ViewApplicant from "../components/ViewApplicante/ViewApplicante";
 import MainLayout from "../MainLayout/MainLayout";
 import AddJob from "../pages/AddJob/AddJob";
 import Home from "../pages/Home/Home";
@@ -84,6 +85,16 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <UpdateJob />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/applications/:job_id",
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/applications/${params.job_id}`),
+        element: (
+          <ProtectedRoute>
+            <ViewApplicant />
           </ProtectedRoute>
         ),
       },

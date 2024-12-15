@@ -4,18 +4,8 @@ import { useLoaderData } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const JobApply = () => {
-  const data = useLoaderData();
-  const {
-    appliedPhoto,
-    appliedName,
-    appliedEmail,
-    company,
-    category,
-    jobType,
-    title,
-    applicationDeadline,
-    company_logo,
-  } = data.data;
+  const { data } = useLoaderData();
+  const { appliedPhoto, appliedName, appliedEmail, _id } = data;
 
   const pdfDownLoadHandler = () => {
     const doc = new jsPDF();
@@ -32,22 +22,18 @@ const JobApply = () => {
 
   const applyFormHandler = (e) => {
     e.preventDefault();
-    const form = e.target;
-    const data = {
-      name: form.name.value,
-      email: form.email.value,
-      photoUrl: form.photo.value,
-      linkedinUrl: form.linkedin.value,
-      githubUrl: form.github.value,
-      resume: form.resume.value,
-      company: company,
-      jobTitle: title,
-      jobCategory: category,
-      jobType,
-      company_logo,
-      applicationDeadline: applicationDeadline,
-    };
-    console.log(data);
+    const formData = new FormData(e.target);
+    const applicantInfo = {};
+    for (const [key, value] of formData.entries()) {
+      applicantInfo[key] = value;
+    }
+    data.applicantInfo = applicantInfo;
+
+    data.job_id = _id;
+    const deleteToKey = ["_id", "appliedEmail", "appliedName", "appliedPhoto"];
+    deleteToKey.forEach((key) => {
+      delete data[key];
+    });
     try {
       fetch("http://localhost:5000/job-apply", {
         method: "POST",
@@ -81,6 +67,7 @@ const JobApply = () => {
             type="text"
             className="grow"
             name="name"
+            readOnly
             defaultValue={appliedName}
             required
             placeholder="Applied name"
@@ -92,6 +79,7 @@ const JobApply = () => {
             type="email"
             name="email"
             className="grow"
+            readOnly
             defaultValue={appliedEmail}
             required
             placeholder="Applied email"
@@ -106,50 +94,6 @@ const JobApply = () => {
             defaultValue={appliedPhoto}
             required
             placeholder="Applied Photo"
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2">
-          <span>Company:</span>
-          <input
-            type="text"
-            className="grow"
-            value={company}
-            readOnly
-            required
-            placeholder="company name"
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2">
-          <span>Job title:</span>
-          <input
-            type="text"
-            className="grow"
-            value={title}
-            readOnly
-            required
-            placeholder="company name"
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2">
-          <span>Job category:</span>
-          <input
-            type="text"
-            className="grow"
-            value={category}
-            readOnly
-            required
-            placeholder="company name"
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2">
-          <span>Job type:</span>
-          <input
-            type="text"
-            className="grow"
-            value={jobType}
-            readOnly
-            required
-            placeholder="company name"
           />
         </label>
         <label className="input input-bordered flex items-center gap-2">

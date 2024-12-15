@@ -62,6 +62,7 @@ const MyJob = () => {
               <th>Name</th>
               <th>Job</th>
               <th>Deadline</th>
+              <th>Application</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -93,6 +94,16 @@ const MyJob = () => {
                   </span>
                 </td>
                 <td>{job.applicationDeadline}</td>
+                <td>
+                  <Link to={`/applications/${job._id}`}>
+                    <button className="btn btn-sm">
+                      View
+                      <span>
+                        {job?.applicationCount ? job.applicationCount : 0}
+                      </span>
+                    </button>
+                  </Link>
+                </td>
                 <th>
                   <Link to={`/my-job/${job._id}`}>
                     <button className="btn btn-xs ">Update</button>
