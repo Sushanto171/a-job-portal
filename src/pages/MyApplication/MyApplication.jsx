@@ -1,9 +1,10 @@
 import { useLoaderData } from "react-router-dom";
 
 const MyApplication = () => {
-  const data = useLoaderData();
+  const { data } = useLoaderData();
+  console.log(data);
 
-  if (data.data.length === 0) {
+  if (data.length === 0) {
     return <h1 className="w-10/12 mx-auto">No data found</h1>;
   }
   return (
@@ -16,12 +17,12 @@ const MyApplication = () => {
               <th>#</th>
               <th>Name</th>
               <th>Job</th>
-              <th>Favorite Color</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {data?.data?.map((job, i) => (
+            {data?.map((job, i) => (
               <tr key={job._id}>
                 <th>{i + 1}</th>
                 <td>
@@ -47,7 +48,13 @@ const MyApplication = () => {
                     Desktop Support Technician
                   </span>
                 </td>
-                <td>Purple</td>
+                <td>
+                  {job?.status
+                    ? job.status === "accept"
+                      ? "Accepted"
+                      : "Rejected"
+                    : "Pending..."}
+                </td>
                 <th>
                   <button className="btn btn-ghost btn-xs">details</button>
                 </th>

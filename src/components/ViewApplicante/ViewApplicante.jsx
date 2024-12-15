@@ -1,18 +1,42 @@
 import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ViewApplicant = () => {
   const { data } = useLoaderData();
+
   const [applications, setApplications] = useState(
-    data ? data.map((app) => ({ ...app, status: null })) : []
+    data ? data.map((app) => ({ ...app })) : []
   );
 
-  const handleAction = (id, action) => {
+  const handleAction = async (id, action) => {
     setApplications((preApplications) =>
       preApplications.map((app) =>
         app._id === id ? { ...app, status: action } : app
       )
     );
+
+    try {
+      const res = await fetch(`http://localhost:5000/status/${id}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json();
+      if (data.data.modifiedCount > 0) {
+        Swal.fire({
+          title: data.message,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: error.message,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
   };
   return (
     <div>
@@ -24,7 +48,7 @@ const ViewApplicant = () => {
             <tr>
               <th>#</th>
               <th>Name</th>
-              <th className="text-center">Links</th>
+              <th>Links</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -50,17 +74,26 @@ const ViewApplicant = () => {
                   </div>
                 </td>
                 <td>
-                  <span className="badge badge-ghost badge-sm">
-                    Linkedin: {application?.applicantInfo?.linkedin}
-                  </span>
+                  <a
+                    href={application?.applicantInfo?.linkedin}
+                    className="badge badge-ghost badge-sm"
+                  >
+                    Linkedin
+                  </a>
                   <br />
-                  <span className="badge badge-ghost badge-sm">
-                    Github: {application?.applicantInfo?.github}
-                  </span>
+                  <a
+                    href={application?.applicantInfo?.github}
+                    className="badge badge-ghost badge-sm"
+                  >
+                    Github
+                  </a>
                   <br />
-                  <span className="badge badge-ghost badge-sm">
-                    Resume: {application?.applicantInfo?.resume}
-                  </span>
+                  <a
+                    href={application?.applicantInfo?.resume}
+                    className="badge badge-ghost badge-sm"
+                  >
+                    Resume
+                  </a>
                 </td>
                 <th>
                   <button
