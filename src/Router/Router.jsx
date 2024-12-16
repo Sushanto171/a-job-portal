@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createBrowserRouter } from "react-router-dom";
 import JobApply from "../components/JobApply/JobApply";
 import UpdateJob from "../components/JobApply/updateJob/UpdateJob";
@@ -25,7 +26,9 @@ export const router = createBrowserRouter([
       {
         path: "/my-application/:email",
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/job-apply/${params.email}`),
+          axios.get(`http://localhost:5000/job-apply/${params.email}`, {
+            withCredentials: true,
+          }),
         element: (
           <ProtectedRoute>
             <MyApplication />

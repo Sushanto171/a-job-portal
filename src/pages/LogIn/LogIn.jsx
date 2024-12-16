@@ -1,3 +1,4 @@
+import axios from "axios";
 import Lottie from "lottie-react";
 import { useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -18,8 +19,13 @@ const LogIn = () => {
     const password = form.password.value;
 
     signIn(email, password)
-      .then((res) => {
+      .then(async (res) => {
         if (res.user) {
+          const user = { email: email };
+          const data = await axios.post(`http://localhost:5000/jwt`, user, {
+            withCredentials: true,
+          });
+          console.log(data);
           navigate(state?.location || "/");
           Swal.fire({
             title: "User Log in successfully",

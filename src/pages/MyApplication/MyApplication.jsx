@@ -1,8 +1,8 @@
 import { useLoaderData } from "react-router-dom";
 
 const MyApplication = () => {
-  const { data } = useLoaderData();
-  console.log(data);
+  const { data: application } = useLoaderData();
+  const { data } = application;
 
   if (data.length === 0) {
     return <h1 className="w-10/12 mx-auto">No data found</h1>;
@@ -48,12 +48,20 @@ const MyApplication = () => {
                     Desktop Support Technician
                   </span>
                 </td>
-                <td>
-                  {job?.status
-                    ? job.status === "accept"
-                      ? "Accepted"
-                      : "Rejected"
-                    : "Pending..."}
+                <td
+                  className={`${
+                    job?.status === "accept" ? "text-green-500" : " text-error"
+                  }`}
+                >
+                  {job?.status ? (
+                    job.status === "accept" ? (
+                      "Accepted"
+                    ) : (
+                      "Rejected"
+                    )
+                  ) : (
+                    <span className="text-gray-600"> Pending...</span>
+                  )}
                 </td>
                 <th>
                   <button className="btn btn-ghost btn-xs">details</button>
