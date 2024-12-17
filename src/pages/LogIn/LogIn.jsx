@@ -1,14 +1,15 @@
-import axios from "axios";
 import Lottie from "lottie-react";
 import { useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAxios from "../../hooks/useAxios";
 import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/register.json";
 const LogIn = () => {
   const { signInWithGoogle, signIn, loading, setLoading } =
     useContext(AuthContext);
+  const axiosInstance = useAxios();
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -22,10 +23,8 @@ const LogIn = () => {
       .then(async (res) => {
         if (res.user) {
           const user = { email: email };
-          const data = await axios.post(`http://localhost:5000/jwt`, user, {
-            withCredentials: true,
-          });
-          console.log(data);
+          const res = await axiosInstance.post("/jwt", user);
+          console.log(res);
           navigate(state?.location || "/");
           Swal.fire({
             title: "User Log in successfully",
@@ -48,7 +47,7 @@ const LogIn = () => {
   //log in with google
   const googleLoginHandler = () => {
     signInWithGoogle()
-      .then((res) => {
+      .then(async (res) => {
         const user = res?.user;
         if (user) {
           const userData = {
@@ -57,6 +56,9 @@ const LogIn = () => {
             photo: user.photoURL,
             terms: false,
           };
+          const info = { email: user.email };
+          const res = await axiosInstance.post("/jwt", info);
+          console.log(res);
           try {
             fetch(`http://localhost:5000/users`, {
               method: "PATCH",

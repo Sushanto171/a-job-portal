@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAxios from "../../hooks/useAxios";
 import { AuthContext } from "../../Provider/AuthContext/AuthContext";
 import animation from "..//..//assets/Lotie/login.json";
 const Register = () => {
@@ -10,6 +11,7 @@ const Register = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const axiosInstance = useAxios();
 
   const passwordValidation = (e) => {
     const password = e.target.value;
@@ -45,49 +47,57 @@ const Register = () => {
     }
     createUser(email, password)
       .then((res) => {
-        try {
-          fetch("http://localhost:5000/users", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(userData),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.success) {
-                Swal.fire({
-                  title: data.message,
-                  timer: 2000,
-                  showConfirmButton: false,
-                });
-                navigate("/");
-                form.reset();
-              } else {
-                Swal.fire({
-                  title: data.message,
-                  timer: 2000,
-                  showConfirmButton: false,
-                });
-              }
+        if (res.user) {
+          try {
+            fetch("http://localhost:5000/users", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(userData),
+            })
+              .then((res) => res.json())
+              .then(async (data) => {
+                if (data.success) {
+                  const res = await axiosInstance.post("/jwt", {
+                    email: email,
+                  });
+                  console.log(res);
+                  Swal.fire({
+                    title: data.message,
+                    timer: 2000,
+                    showConfirmButton: false,
+                  });
+                  navigate("/");
+                  form.reset();
+                } else {
+                  Swal.fire({
+                    title: data.message,
+                    timer: 2000,
+                    showConfirmButton: false,
+                  });
+                }
+              });
+          } catch (error) {
+            Swal.fire({
+              title: data.message,
+              timer: 2000,
             });
-        } catch (error) {
-          Swal.fire({
-            title: data.message,
-            timer: 2000,
-          });
+          }
         }
       })
       .catch((error) => {
-        setError(error);
+        console.log(error);
+        setError(error.message);
       });
     setError("");
-    setSuccess("");
+    setSuccess(error.message);
   };
 
   const googleLoginHandler = () => {
     signInWithGoogle()
-      .then((res) => {
+      .then(async (res) => {
         const user = res?.user;
         if (user) {
+          const res = await axiosInstance.post("/jwt", { email: user.email });
           const userData = {
             name: user.displayName,
             email: user.email,

@@ -25,10 +25,9 @@ export const router = createBrowserRouter([
       },
       {
         path: "/my-application/:email",
-        loader: ({ params }) =>
-          axios.get(`http://localhost:5000/job-apply/${params.email}`, {
-            withCredentials: true,
-          }),
+        loader: ({ params }) => {
+          return axios.get(`http://localhost:5000/job-apply/${params.email}`);
+        },
         element: (
           <ProtectedRoute>
             <MyApplication />
