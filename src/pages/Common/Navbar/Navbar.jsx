@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import logo from "../../../assets/logo.png";
+import useAxios from "../../../hooks/useAxios";
 import { AuthContext } from "./../../../Provider/AuthContext/AuthContext";
 
 const Navbar = () => {
@@ -11,10 +12,12 @@ const Navbar = () => {
     setUser,
     loading: globalLoading,
   } = useContext(AuthContext);
+  const axiosInstance = useAxios();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const signOutHandler = () => {
     signOutUser().then(() => {
+      axiosInstance.post("/logOut");
       navigate("/login");
       Swal.fire({
         title: "sign out success",
@@ -30,7 +33,7 @@ const Navbar = () => {
         const email = user?.email;
         setLoading(true);
         if (email) {
-          fetch(`http://localhost:5000/users/${email}`)
+          fetch(`https://a-job-portal-server.vercel.app/users/${email}`)
             .then((res) => res.json())
             .then((data) => {
               setUser(data.data);
@@ -39,7 +42,6 @@ const Navbar = () => {
           setUser(user);
         }
       } catch (error) {
-        // console.log(error);
       } finally {
         setLoading(false);
       }
@@ -60,28 +62,40 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink
-          to={`/my-application/${user?.email}`}
+          to="/all-jobs"
           className={({ isActive }) => (isActive ? "underline" : "")}
         >
-          My Application
+          All Jobs
         </NavLink>
       </li>
-      <li>
-        <NavLink
-          to={`/add-job`}
-          className={({ isActive }) => (isActive ? "underline" : "")}
-        >
-          Add Job
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to={`/my-jobs/${user?.email}`}
-          className={({ isActive }) => (isActive ? "underline" : "")}
-        >
-          My Jobs
-        </NavLink>
-      </li>
+      {user && (
+        <>
+          <li>
+            <NavLink
+              to={`/my-application/${user?.email}`}
+              className={({ isActive }) => (isActive ? "underline" : "")}
+            >
+              My Application
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/add-job`}
+              className={({ isActive }) => (isActive ? "underline" : "")}
+            >
+              Add Job
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={`/my-jobs/${user?.email}`}
+              className={({ isActive }) => (isActive ? "underline" : "")}
+            >
+              My Jobs
+            </NavLink>
+          </li>
+        </>
+      )}
     </>
   );
   const links = (

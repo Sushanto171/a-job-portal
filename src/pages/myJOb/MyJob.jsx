@@ -25,12 +25,15 @@ const MyJob = () => {
 
   const deleteHandler = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/jobs/${id}`, {
-        method: "DELETE",
-        headers: { "content-type": "application/json" },
-      });
+      const res = await fetch(
+        `https://a-job-portal-server.vercel.app/jobs/${id}`,
+        {
+          method: "DELETE",
+          headers: { "content-type": "application/json" },
+        }
+      );
       if (res.status === 200) {
-        fetch(`http://localhost:5000/jobs?hr_email=${email}`)
+        fetch(`https://a-job-portal-server.vercel.app/jobs?hr_email=${email}`)
           .then((res) => res.json())
           .then((data) => setJobs(data.data));
 

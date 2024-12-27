@@ -49,7 +49,7 @@ const Register = () => {
       .then((res) => {
         if (res.user) {
           try {
-            fetch("http://localhost:5000/users", {
+            fetch("https://a-job-portal-server.vercel.app/users", {
               method: "POST",
               headers: { "content-type": "application/json" },
               body: JSON.stringify(userData),
@@ -60,7 +60,7 @@ const Register = () => {
                   const res = await axiosInstance.post("/jwt", {
                     email: email,
                   });
-                  console.log(res);
+
                   Swal.fire({
                     title: data.message,
                     timer: 2000,
@@ -85,7 +85,6 @@ const Register = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
         setError(error.message);
       });
     setError("");
@@ -105,7 +104,7 @@ const Register = () => {
             terms: false,
           };
           try {
-            fetch(`http://localhost:5000/users`, {
+            fetch(`https://a-job-portal-server.vercel.app/users`, {
               method: "PATCH",
               headers: { "content-type": "application/json" },
               body: JSON.stringify(userData),
@@ -121,14 +120,10 @@ const Register = () => {
                   });
                 }
               });
-          } catch (error) {
-            console.log(error);
-          }
+          } catch (error) {}
         }
       })
-      .catch((error) => {
-        console.log(error, "ERROR");
-      });
+      .catch((error) => {});
   };
   return (
     <>

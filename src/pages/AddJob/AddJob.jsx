@@ -25,10 +25,10 @@ const AddJob = () => {
     keysToDelete.forEach((key) => {
       delete jobData[key];
     });
-    // console.log(jobData);
+
     // make a job by input jobData
     try {
-      const res = await fetch("http://localhost:5000/jobs", {
+      const res = await fetch("https://a-job-portal-server.vercel.app/jobs", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(jobData),

@@ -24,7 +24,7 @@ const LogIn = () => {
         if (res.user) {
           const user = { email: email };
           const res = await axiosInstance.post("/jwt", user);
-          console.log(res);
+
           navigate(state?.location || "/");
           Swal.fire({
             title: "User Log in successfully",
@@ -58,9 +58,9 @@ const LogIn = () => {
           };
           const info = { email: user.email };
           const res = await axiosInstance.post("/jwt", info);
-          console.log(res);
+
           try {
-            fetch(`http://localhost:5000/users`, {
+            fetch(`https://a-job-portal-server.vercel.app/users`, {
               method: "PATCH",
               headers: { "content-type": "application/json" },
               body: JSON.stringify(userData),
@@ -76,14 +76,10 @@ const LogIn = () => {
                   });
                 }
               });
-          } catch (error) {
-            console.log(error);
-          }
+          } catch (error) {}
         }
       })
-      .catch((error) => {
-        console.log(error, "ERROR");
-      });
+      .catch((error) => {});
   };
   return (
     <>

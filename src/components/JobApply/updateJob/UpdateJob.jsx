@@ -11,12 +11,12 @@ const UpdateJob = () => {
   }, [id]);
   const jobLoad = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/jobs?id=${id}`);
+      const res = await fetch(
+        `https://a-job-portal-server.vercel.app/jobs?id=${id}`
+      );
       const { data } = await res.json();
       setUpdateJob(data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const {
@@ -57,11 +57,14 @@ const UpdateJob = () => {
 
     // update job
     try {
-      const res = await fetch(`http://localhost:5000/job/${_id}`, {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(updateJobIn),
-      });
+      const res = await fetch(
+        `https://a-job-portal-server.vercel.app/job/${_id}`,
+        {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(updateJobIn),
+        }
+      );
       const data = await res.json();
       if (data.data.modifiedCount > 0) {
         Swal.fire({

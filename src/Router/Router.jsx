@@ -1,4 +1,3 @@
-import axios from "axios";
 import { createBrowserRouter } from "react-router-dom";
 import JobApply from "../components/JobApply/JobApply";
 import UpdateJob from "../components/JobApply/updateJob/UpdateJob";
@@ -7,6 +6,7 @@ import MainLayout from "../MainLayout/MainLayout";
 import AddJob from "../pages/AddJob/AddJob";
 import Home from "../pages/Home/Home";
 import JobDetails from "../pages/JobDetails/JobDetails";
+import Jobs from "../pages/Jobs/Jobs";
 import LogIn from "../pages/LogIn/LogIn";
 import MyApplication from "../pages/MyApplication/MyApplication";
 import MyJob from "../pages/myJOb/MyJob";
@@ -25,9 +25,6 @@ export const router = createBrowserRouter([
       },
       {
         path: "/my-application/:email",
-        loader: ({ params }) => {
-          return axios.get(`http://localhost:5000/job-apply/${params.email}`);
-        },
         element: (
           <ProtectedRoute>
             <MyApplication />
@@ -39,13 +36,17 @@ export const router = createBrowserRouter([
         element: <LogIn />,
       },
       {
+        path: "/all-jobs",
+        element: <Jobs />,
+      },
+      {
         path: "/register",
         element: <Register />,
       },
       {
         path: "/jobs/:id",
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/jobs?id=${params.id}`),
+          fetch(`https://a-job-portal-server.vercel.app/jobs?id=${params.id}`),
         element: (
           <ProtectedRoute>
             <JobDetails />
@@ -56,7 +57,7 @@ export const router = createBrowserRouter([
         path: "/jobs-apply/:id/:email",
         loader: ({ params }) =>
           fetch(
-            `http://localhost:5000/jobs-applied?id=${params.id}&email=${params.email}`
+            `https://a-job-portal-server.vercel.app/jobs-applied?id=${params.id}&email=${params.email}`
           ),
         element: (
           <ProtectedRoute>
@@ -75,7 +76,9 @@ export const router = createBrowserRouter([
       {
         path: "/my-jobs/:email",
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/jobs?hr_email=${params.email}`),
+          fetch(
+            `https://a-job-portal-server.vercel.app/jobs?hr_email=${params.email}`
+          ),
         element: (
           <ProtectedRoute>
             <MyJob />
@@ -93,7 +96,9 @@ export const router = createBrowserRouter([
       {
         path: "/applications/:job_id",
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/applications/${params.job_id}`),
+          fetch(
+            `https://a-job-portal-server.vercel.app/applications/${params.job_id}`
+          ),
         element: (
           <ProtectedRoute>
             <ViewApplicant />

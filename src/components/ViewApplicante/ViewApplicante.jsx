@@ -17,11 +17,14 @@ const ViewApplicant = () => {
     );
 
     try {
-      const res = await fetch(`http://localhost:5000/status/${id}`, {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
+      const res = await fetch(
+        `https://a-job-portal-server.vercel.app/status/${id}`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ action }),
+        }
+      );
       const data = await res.json();
       if (data.data.modifiedCount > 0) {
         Swal.fire({

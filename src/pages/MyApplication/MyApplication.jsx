@@ -1,8 +1,18 @@
-import { useLoaderData } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import useAxios from "../../hooks/useAxios";
 
 const MyApplication = () => {
-  const { data: application } = useLoaderData();
-  const { data } = application;
+  const { email } = useParams();
+  const axiosInstance = useAxios();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axiosInstance
+      .get(`https://a-job-portal-server.vercel.app/job-apply/${email}`)
+      .then((res) => {
+        setData(res.data.data);
+      });
+  }, [email]);
 
   if (data.length === 0) {
     return <h1 className="w-10/12 mx-auto">No data found</h1>;
@@ -22,7 +32,7 @@ const MyApplication = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((job, i) => (
+            {data.map((job, i) => (
               <tr key={job._id}>
                 <th>{i + 1}</th>
                 <td>

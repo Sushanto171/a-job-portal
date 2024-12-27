@@ -5,7 +5,16 @@ import Swal from "sweetalert2";
 
 const JobApply = () => {
   const { data } = useLoaderData();
-  const { appliedPhoto, appliedName, appliedEmail, _id } = data;
+  const {
+    appliedPhoto,
+    appliedName,
+    appliedEmail,
+    _id,
+    company,
+    title,
+    category,
+    jobType,
+  } = data;
 
   const pdfDownLoadHandler = () => {
     const doc = new jsPDF();
@@ -35,7 +44,7 @@ const JobApply = () => {
       delete data[key];
     });
     try {
-      fetch("http://localhost:5000/job-apply", {
+      fetch("https://a-job-portal-server.vercel.app/job-apply", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(data),
@@ -48,9 +57,7 @@ const JobApply = () => {
             showConfirmButton: false,
           });
         });
-    } catch (error) {
-      console.log("ERROR", error);
-    }
+    } catch (error) {}
   };
   return (
     <div className="card w-full max-w-lg mx-auto border p-5 pt-0 bg-base-200 my-5">
